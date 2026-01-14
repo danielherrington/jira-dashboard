@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner 
+      # For dev we might want to override to not use the production target, but for now strict aligned with "use a docker container for running things"
+      # Actually for dev usually we mount volume and run `npm run dev`. 
+      # Let's start with production build for stability as requested "docker container for running things" 
+      # but standard practice is usually dev mode.
+      # User asked: "develop the dashboard UI... use a docker container for running things"
+      # I'll enable dev mode in compose for easier iteration if desired, but default to prod for 'running'.
+      # Let's stick to a standard setup where we can comfortably run it.
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
