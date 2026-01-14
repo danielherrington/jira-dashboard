@@ -5,8 +5,6 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { query } = body;
 
-        const { query } = body;
-
         // We use the Gemini API Key to authenticate the LLM session
         // This key allows us to interact with the Rovo MCP tools via the Gemini model
         const geminiKey = process.env.GEMINI_API_KEY;

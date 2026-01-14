@@ -1,5 +1,7 @@
 import { DashboardLayout } from '../components/DashboardLayout';
 import { MetricCard } from '../components/MetricCard';
+import TimelineChart from '../components/charts/TimelineChart';
+import HealthRadar from '../components/charts/HealthRadar';
 
 export default function Home() {
   return (
@@ -25,14 +27,7 @@ export default function Home() {
           <MetricCard
             title="Open Compliance Issues"
             value="3"
-            trend={{ value: "-2 from yesterday", direction: 'down' }} // 'down' for issues is usually good, but visually red/green depends on context. I used 'trendDown' (red) in CSS. I should fix this semantic. 
-          // Actually, usually down for issues is green (good). 
-          // Logic in component maps 'down' to 'trendDown' class which is --danger (red). 
-          // I should simply use a 'status' prop or flexible color. 
-          // For now, I'll stick to 'down' -> red, 'up' -> green. 
-          // If issues go down, that's good (Green). 
-          // Let's assume 'direction' implies visual color (up=green, down=red). So for issues, if I want green, I'd say 'up'? No that's confusing.
-          // I'll stick to the current impl and maybe refactor later or just accept red arrow for now for 'down'.
+            trend={{ value: "-2 from yesterday", direction: 'down' }}
           />
           <MetricCard
             title="Active Sprints"
@@ -41,40 +36,51 @@ export default function Home() {
           />
         </div>
 
-        {/* Main Content Sections (Rows) */}
-        <div className="glass-panel" style={{ padding: '2rem', minHeight: '300px' }}>
-          <h2 style={{ marginBottom: '1rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '1rem' }}>Strategic Roadmap</h2>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', color: 'var(--text-secondary)' }}>
-            Render Gantt Chart Here
+        {/* Strategic Timeline */}
+        <div className="glass-panel" style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Strategic Roadmap</h2>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-accent)' }}>Q1 - Q4 2026</div>
           </div>
+          <TimelineChart />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div className="glass-panel" style={{ padding: '2rem', minHeight: '300px' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Engineering Velocity</h2>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', color: 'var(--text-secondary)' }}>
-              Render Velocity / Burndown
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
+          {/* Engineering Radar */}
+          <div className="glass-panel" style={{ padding: '2rem', minHeight: '400px' }}>
+            <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>Engineering Velocity</h2>
+            <div style={{ width: '100%', height: '300px' }}>
+              <HealthRadar />
             </div>
           </div>
 
-          <div className="glass-panel" style={{ padding: '2rem', minHeight: '300px' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Rovo Insights & Q&A</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <input
-                type="text"
-                placeholder="Ask Rovo about project risks..."
-                style={{
-                  width: '100%',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--card-border)',
-                  background: 'rgba(0,0,0,0.2)',
-                  color: 'white',
-                  outline: 'none'
-                }}
-              />
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                Recent queries: "What is blocking the checkout migration?", "Show me high risk dependencies."
+          {/* Rovo Insights */}
+          <div className="glass-panel" style={{ padding: '2rem', minHeight: '400px' }}>
+            <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>Rovo Insights & Q&A</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
+              <div style={{ flex: 1, background: 'rgba(0,0,0,0.1)', borderRadius: '8px', padding: '1rem', overflowY: 'auto' }}>
+                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', marginBottom: '0.5rem' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-accent)', marginBottom: '0.25rem' }}>Rovo • Just now</div>
+                  Dependencies for "Mobile Redesign" and "Compliance" are tightening. Suggest review of design specs.
+                </div>
+              </div>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  placeholder="Ask Rovo about project risks..."
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    paddingRight: '3rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--card-border)',
+                    background: 'rgba(0,0,0,0.2)',
+                    color: 'white',
+                    outline: 'none',
+                    fontSize: '0.875rem'
+                  }}
+                />
+                <div style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}>↵</div>
               </div>
             </div>
           </div>

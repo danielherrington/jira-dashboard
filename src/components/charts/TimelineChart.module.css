@@ -1,0 +1,118 @@
+.container {
+    width: 100%;
+    position: relative;
+    font-size: 0.875rem;
+}
+
+.gridBackground {
+    display: flex;
+    margin-left: 140px;
+    /* Space for labels */
+    border-bottom: 1px solid var(--text-accent);
+    margin-bottom: 1rem;
+}
+
+.quarter {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-left: 1px dashed var(--card-border);
+}
+
+.quarter:last-child {
+    border-right: 1px dashed var(--card-border);
+}
+
+.barsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+}
+
+.trackLabel {
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 1rem;
+}
+
+.trackName {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.trackOwner {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.trackLane {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.02);
+    height: 32px;
+    border-radius: 6px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bar {
+    position: absolute;
+    height: 20px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.bar:hover {
+    height: 24px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+/* Status Colors with Premium Gradients */
+.completed {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.on-track {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.risk {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.delayed {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
