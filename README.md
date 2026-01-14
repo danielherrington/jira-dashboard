@@ -1,8 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Orbit Jira Dashboard
+
+A high-performance, Chief-of-Staff grade dashboard for Jira, built with Next.js, Docker, and Recharts.
+
+![Dashboard Preview](public/dashboard-preview.png)
+
+## Features
+
+- **Strategic Roadmap**: Gantt-style visualization of initiatives.
+- **Engineering Radar**: Multi-dimensional health metrics.
+- **Rovo Intelligence**: AI-powered Q&A for project risks (powered by Gemini).
+- **Dockerized**: specific container support for easy deployment.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Docker & Docker Compose
+- Jira Cloud Account (API Token)
+- Gemini API Key
+
+### Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/danielherrington/jira-dashboard.git
+   cd jira-dashboard
+   ```
+
+2. **Configure Environment**
+   Copy the example environment file:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Fill in your keys in `.env.local`.
+
+3. **Run with Docker**
+
+   ```bash
+   docker compose up --build
+   ```
+
+   Access the dashboard at [http://localhost:3000](http://localhost:3000).
+
+### Data Discovery (Optional)
+
+To inspect your Jira configuration and customize the mapping:
+
+1. Ensure `.env` exists with your keys (Note: the script uses `.env`, Next.js uses `.env.local`).
+2. Run the discovery script:
+
+   ```bash
+   # If running locally with Node
+   npx tsx scripts/discover-jira-structure.ts
+   
+   # Or via Docker (if Node is not installed locally)
+   docker run --rm -v "$(pwd):/app" -w /app --env-file .env node:20-alpine npx -y tsx scripts/discover-jira-structure.ts
+   ```
 
 ```bash
 npm run dev

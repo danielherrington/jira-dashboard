@@ -2,8 +2,16 @@ import { DashboardLayout } from '../components/DashboardLayout';
 import { MetricCard } from '../components/MetricCard';
 import TimelineChart from '../components/charts/TimelineChart';
 import HealthRadar from '../components/charts/HealthRadar';
+import { JiraClient } from '../lib/jira';
 
-export default function Home() {
+// Force dynamic to ensure we get fresh data on refresh
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const client = new JiraClient();
+  const metrics = await client.getMetrics();
+  const roadmap = await client.fetchRoadmap();
+
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -42,7 +50,7 @@ export default function Home() {
             <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Strategic Roadmap</h2>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-accent)' }}>Q1 - Q4 2026</div>
           </div>
-          <TimelineChart />
+          <TimelineChart items={roadmap} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>

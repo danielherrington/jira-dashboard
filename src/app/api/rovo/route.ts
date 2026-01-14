@@ -1,27 +1,45 @@
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
-        const { query } = body;
+        const { message, context } = await req.json();
+        const apiKey = process.env.GEMINI_API_KEY;
 
-        // We use the Gemini API Key to authenticate the LLM session
-        // This key allows us to interact with the Rovo MCP tools via the Gemini model
-        const geminiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            return NextResponse.json({ reply: "I'm not connected to Gemini right now. Please check your API key." });
+        }
 
-        // In a real implementation:
-        // 1. Initialize Gemini Client with `geminiKey`
-        // 2. Connect to Rovo MCP Server (Cloud GW)
-        // 3. Send query + tool definitions to Gemini
-        // 4. Execute Rovo tools if Gemini requests them
-        console.log(`Processing query on Rovo MCP via Gemini: "${query}"`);
+        const prompt = `
+      You are Rovo, an intelligent assistant for the Chief of Staff.
+      Context: access to Jira Roadmap and Engineering Health data.
+      User asks: "${message}"
+      
+      Current Dashboard Context: ${JSON.stringify(context || {})}
+      
+      Provide a concise, executive-level answer. Focus on risks and strategic alignment.
+    `;
 
-        // Mock response
-        const answer = `[Gemini Invoked] Based on Rovo insights: The roadmap is on track, but compliance dependencies in the implementation phase are a risk. (Query: ${query})`;
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
 
-        return NextResponse.json({ answer });
+        if (!response.ok) {
+            throw new Error(`Gemini API Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't generate a clear insight right now.";
+
+        return NextResponse.json({ reply });
+
     } catch (error) {
-        console.error('Rovo API Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Rovo Error:', error);
+        return NextResponse.json({ error: 'Failed to fetch Rovo insight' }, { status: 500 });
     }
 }
